@@ -3,19 +3,33 @@ services:
   db:
     container_name: pg_container
     image: postgres:latest
-    restart: always
+    restart: no
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
     ports:
       - "5432:5432"
+    networks:
+      intranet_dbs:
+        ipv4_address: 172.20.0.2
+
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
-    restart: always
+    restart: no
     environment:
       PGADMIN_DEFAULT_EMAIL: brarojasc@gmail.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+    networks:
+      - intranet_dbs
+
+networks:
+  intranet_dbs:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
